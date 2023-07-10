@@ -8,9 +8,9 @@
   </head>
   <body>
     <div id="app">
-      <input id="a" type="text" v-bind:value="message" />
+      <input id="a" type="text" v-model="name" />
       <br />
-      <img v-bind:src="imagePath" />
+      입력한 이름: <span>{{name}}</span>
     </div>
     <script type="text/javascript" src="https://unpkg.com/vue"></script>
     <script type="text/javascript">
@@ -18,8 +18,7 @@
         name: "App",
         data() {
           return {
-            message: "v-bind 디렉티브",
-            imagePath: "https://contactsvc.bmaster.kro.kr/photos/18.jpg",
+            name: "",
           };
         },
       }).mount("#app");

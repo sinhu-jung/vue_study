@@ -8,9 +8,15 @@
   </head>
   <body>
     <div id="app">
-      <input id="a" type="text" v-bind:value="message" />
-      <br />
-      <img v-bind:src="imagePath" />
+      위의 내용에 동의하십니끼?
+      <input
+        type="checkbox"
+        v-model="agree"
+        true-value="yes"
+        false-value="no"
+      />
+      <hr />
+      <span>선택된 값 : {{agree}}</span>
     </div>
     <script type="text/javascript" src="https://unpkg.com/vue"></script>
     <script type="text/javascript">
@@ -18,8 +24,7 @@
         name: "App",
         data() {
           return {
-            message: "v-bind 디렉티브",
-            imagePath: "https://contactsvc.bmaster.kro.kr/photos/18.jpg",
+            agree: "no",
           };
         },
       }).mount("#app");
