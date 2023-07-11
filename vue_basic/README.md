@@ -134,3 +134,166 @@ v-model.trim.lazy 와 같이 한번에 여러개의 수식어를 부여 할 수�
   - 형변환이 불가능한 문자열은 문자열로 저장된다.
 
 ### v-model의 한글 처리
+
+- v-model 에서 한글을 처리 할 때 는 한글 한글자가 입력이 완료 될 때 처리 되고 있기 때문에 "가나다"를 입력 했는데 "가나"만 입력된다.
+
+이러한 문제는 이벤트 처리를 통해 간단히 해결 할 수 있다.
+
+v-model_korean 을 보면 v-model 디렉티브 대신에 :value (v-bind) 디렉티브 를 이용해 단방향 데이터를 바인딩 하고 있다.
+하지만 @input="changeName" 과 같이 이벤트 핸들러를 등록하여
+프록시에 methods 부분에서 사용자가 입력한 값을 name 데이터로 부여하고 있다.
+이로써 한글 입력 문제가 해결 된 것을 볼 수있다.
+
+## 조건 렌더링 디렉티브
+
+- 개발을 하다 보면 조건에 따라 화면에 렌더링 할지 말지를 결정해야 하는 경우가 있다.
+- 이런경우에 v-show, v-if, v-if-else, v-else 등의 조건 렌더링과 관련된 디렉티브를 이용하여 렌더링 할지 말지 결정 할 수 있다.
+
+### v-show
+
+- v-show 는 화면에 보여줄지 말지를 결정하는 디렉티브이다.
+- 렌더링은 수행하지만 화면에 보여주지는 않을 수 있다.
+
+```
+<img
+    v-show="amount < 0"
+    src="https://contactsvc.bmaster.kro.kr/img/error.png"
+    title="마이너스는 허용하지 않습니다.""
+    style="width: 15px; height: 15px; vertical-align: middle"
+/>
+```
+
+v-show="amount < 0" 의 조건 과 같이 부여된 조건이 true 일 때만 화면에 보여준다.
+false 일 때 개발자 도구에서 보면 display 속성이 none으로 돼 있는것을 알 수 있다.
+
+### v-if
+
+- v-if는 조건에 부합되지 않을 경우 렌더링을 수행하지 않도록 한다.
+- v-show와의 차이점은 렌더링을 수행할지 아닐지 인 것 같다.
+
+```
+<img
+    v-if="amount < 0"
+    src="https://contactsvc.bmaster.kro.kr/img/error.png"
+    title="마이너스는 허용하지 않습니다.""
+    style="width: 15px; height: 15px; vertical-align: middle"
+/>
+```
+
+정리하면 다음과 같다.
+v-show는 보안 정보를 다루는 경우라면 사용하면 안 되고 v-if 를 사용해야한다.
+
+### v-else, v-else-if
+
+- v-if 와 함께 v-else, v-else-if 디렉티브를 사용하면 js 의 if ~ else if ~ else 문과 같은 조건 처리를 할 수 있다.
+
+```
+<span v-if="balance >= 1000000">Gold</span>
+<span v-else-if="balance >= 500000">Silver</span>
+<span v-else-if="balance >= 200000">Bronze</span>
+<span v-else>Basic</span>
+```
+
+## 반복 렌더링 디렉티브
+
+### v-for 디렉티브
+
+- v-for 은 js의 for 문과 유사하게 반복적인 데이터를 렌더링하기 위해서 v-for 디렉티브를 사용한다.
+
+```
+  <body>
+    <div id="app">
+      <table id="list">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>이름</th>
+            <th>전화번호</th>
+          </tr>
+        </thead>
+        <tbody id="contacts">
+          <tr v-for="contact in contacts" v-bind:key="contact.no">
+            <td>{{contact.no}}</td>
+            <td>{{contact.name}}</td>
+            <td>{{contact.tel}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script type="text/javascript" src="https://unpkg.com/vue"></script>
+    <script type="text/javascript">
+      const vm = Vue.createApp({
+        name: "App",
+        data() {
+          return {
+            pageno: 1,
+            pagesize: 4,
+            totalcount: 100,
+            contacts: [
+              { no: 1011, name: "RM", tel: "010-3456-8299" },
+              { no: 1012, name: "정국", tel: "010-3456-8298" },
+              { no: 1013, name: "제이홉", tel: "010-3456-8297" },
+              { no: 1014, name: "슈가", tel: "010-3456-8296" },
+            ],
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+```
+
+- v-for 은 원본 데이터가 객체인 경우에는 사용방법이 달라진다.
+
+```
+  <body>
+    <div id="app">
+      <select id="regions">
+        <option disabled="disabled" selected>지역을 선택하세요.</option>
+        <option v-for="(val, key) in regions" v-bind:value="key" :key="key">
+          {{val}}
+        </option>
+      </select>
+    </div>
+    <script type="text/javascript" src="https://unpkg.com/vue"></script>
+    <script type="text/javascript">
+      const vm = Vue.createApp({
+        name: "App",
+        data() {
+          return {
+            regions: {
+              A: "Asia",
+              B: "America",
+              C: "Europe",
+              D: "Africa",
+              E: "Oceania",
+            },
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+```
+
+- regions 는 배열이 아니라 객체이며 v-for 디렉티브를 보면 (val, key) 를 작성한 것을 볼 수 있다.
+- val에 텍스트가 전달 되고 key 에 객체의 키갑이 전달된다.
+- 인덱스 번호를 함께 표현해야 한다면 다음과 같다.
+
+  ```
+  배열 데이터인 경우
+  <tr v-for="(contact, index) in contacts" ...>...</tr>
+
+  객체 데이터인 경우
+  <option v-for="(val, key, index) in regions" ...>...</option>
+  ```
+
+필드에 인덱스 번호를 이용하려면 다음과 같다.
+
+```
+<tbody id="contacts">
+    <tr v-for="(contact, index) in contacts" :key="contact.no">
+        <td>{{index+1}}</td>
+        <td>{{contact.name}}</td>
+        <td>{{contact.tel}}</td>
+    </tr>
+</tbody>
+```
