@@ -304,3 +304,83 @@ v-show는 보안 정보를 다루는 경우라면 사용하면 안 되고 v-if �
 - v-for-multi-element.html 참고
   - v-for-multi-element 에서는 <tr> 요소를 한 번에 반복 렌더링하기 위해 <template> 태그로 묶었다.
   - <template> 태그는 렌더링 내용에는 포함하지는 않지만 요소드를을 그룹으로 묶어주기 위한 용도로 사용된다.
+
+### v-for 디렉티브와 key 특성
+
+key 특성은 v-for 디렉티브에서 :key='c.no' 와 같이 지정한 부부이다.
+vue.js 는 가상돔을 지원하며 가상돔은 렌더링 속도를 빠르게 하기 위해 변경 된 부분만 업데이트 한다.
+vuu.js 의 가상돔은 v-for로 렌더링한 배열 데이터의 순서가 변경되면 DOM 요소를 이동시키지 않고 기존 돔 요소의 데이터를 변경한다.
+
+돔 요소를 추적하여 돔 요소의 위치를 직접 변경하려고 한다면 돔 요소에 key 특성을 부여할 수 있다.
+v-bind 디렉티브를 이용해 key 특성에 고유한 값을 부여하면 된다.
+
+key 특성을 부여하지 않아도 렌더링은 수행되지만 배열 내부의 데이터가 빈번하게 변경되는 경우는 모든 배열 요소를 렌더링 하기 때문에 성능에 좋지 않다.
+key 특성을 부여하면 변경되지 않은 것은 가상돔에 대한 렌더링을 수행하지 않을 수 있기 때문에 더 좋은 성능을 낼 수 있다.
+
+key 특성에는 인덱스 번호를 부여하면 안되고 반드시 고유한 변경되지 않는 값을 부여해야 한다.
+인덱스를 키에 넣으면 데이터가 새로 추가되거나 삭제 됐을 때 key가 모두 변경되기 때문에 모두 렌더링을 다시 시도 하기 때문이다.
+
+## 기타 디렉티브
+
+### v-pre 디렉티브
+
+v-pre 는 HTML 요소에 대한 컴파일을 수행하지 않는다.
+v-pre.html 을 참고 하여 보면
+v-pre를 사용한 부분에 보간법이 적용 이 안되고 {{message}} 를 그대로 출력하는 것을 볼 수 있다.
+위와 같이 템플릿 문자열을 컴파일하지 않고 그대로 내보내기 위해 v-pre를 사용한다.
+
+### v-once 디렉티브
+
+v-once 디렉티브는 HTML 요소를 단 한번만 렌더링 하도록 한다.
+v-pre.html 의 v-pre 부분을 v-once로 수정한 뒤 실행 시키면 정상적으로 데이터를 출력 하는 것을 볼 수 있다.
+v-once는 초기 렌더링이 완료 된 후 데이터가 변경 되더라도 다시 렌더링이 되지 않는다.
+
+### v-cloak 디렉티브
+
+v-cloak 디렉티브는 v-for 디렉티브를 이용해 많은 데이터를 출력할 때 보간법 표현식이 화면에 일시적으로 보이는 현상이 있다.
+이것의 이유는 vue의 인스턴스가 템플릿을 컴파일 할 때 발생하는 시간 때문에 일어나는 현상이다.
+이와 같은 경우에 사용할 수 있는 디렉티브가 v-cloak 이다.
+v-cloak 은 화면에 초기에 컴파일되지 않은 템플릿은 나타나지 않도록 할 수 있다.
+
+## 동적 아규먼트(Dynamic Argument)
+
+- 동적 아규먼트는 디렉티브를 이용해 연결하고자 하는 특성의 이름을 데이터나 속성으로 연결할 수 있도록 하는 문법이다.
+- v-bind 디렉티브나 이벤트 처리를 위한 v-on 디렉티브에서 사용한다.
+
+- v-bind
+
+```
+<element v-bind:[attribute] = "[attribute]"></element>
+<element :[attribute] = "[attribute]"></element>
+```
+
+- v-on
+
+```
+<element v-on:[eventName] = "[function code]"></element>
+<element @[eventName] = "[function code]"></element>
+```
+
+### 동적 아규먼트 제약 사항
+
+- v-bind:[attribute] 와 같은 부분에서 사용하는 키 이름은 대문자를 사용해도 소문자인 데이터를 엑세스 하려 한다.
+- 따라서 혼란을 피하려면 키 이름은 소문자로 하는 것이 좋다.
+- v-bind:[attribute + num] 과 같이 [] 내부 표현식으로 연산식을 사용할 수 없다.
+  - 복잡한 키 이름을 동적으로 생성 하여 사용해야 한다면 계산된 속성(computed property) 를 이용해야 한다.
+- Infinity, NaN, Math, Number 와 같은 문자열은 키 이름으로 사용하지 못한다.
+  - 전역 화이트리스트로 등록되어 있어 엑세스 할 수 없다.
+  - 전역 화이트 리스트 목록은 다음과 같다.
+    - https://github.com/vuejs/vue-next/blob/master/packages/shared/src/globalsWhitelist.ts
+
+### 여러개의 속성 bind
+
+- v-bind-multi-attribute 를 참고 해서 보면 image1 객체는 attrName : attrValue 로 구성 돼 있다. 이러한 데이터를 바인딩 하면 다음과 같은 기능을 가진다.
+
+```
+<img
+  src: "http://contactsvc.bmaster.kro.kr/photos/18.jpg",
+  title: "Lily's photo",
+/>
+```
+
+여러개의 특성, 속성을 한번에 바인딩 할 때 좋다.
