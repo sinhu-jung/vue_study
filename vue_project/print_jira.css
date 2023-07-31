@@ -1,0 +1,124 @@
+@media screen and (max-width: 1000px) {
+  #app {
+    height: 98vh;
+    width: 100%;
+    min-width: 1000px;
+    align-items: center;
+    display: flex;
+    justify-content: "center";
+  }
+}
+
+#app {
+  height: 98vh;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: "center";
+}
+
+.center {
+  margin: auto;
+  width: 652px;
+}
+
+.center h1 {
+  width: 600px;
+  text-align: center;
+  font-size: larger;
+}
+
+.container {
+  width: 600px;
+  height: 600px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 25px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.flexStyle {
+  display: flex;
+}
+
+.container div div {
+  margin: 8px 20px;
+}
+
+.container div span {
+  margin-top: 5px;
+  line-height: 30px;
+  min-width: 65px;
+  font-weight: bolder;
+}
+
+.flexStyle input {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.comment {
+  color: red;
+  font-size: small;
+  margin-top: 5px;
+}
+
+.id_control {
+  width: 100%;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  display: initial;
+  height: 67px;
+}
+
+.id_control::-webkit-scrollbar {
+  display: none;
+}
+
+.id_control span {
+  border-radius: 15px;
+  border: none;
+  background-color: #1d81ff;
+  color: white;
+  padding: 3px 8px;
+  font-size: 10pt;
+  margin: 5px;
+}
+
+.id_control span::after {
+  display: inline-block;
+  color: white;
+  content: "\00d7";
+  font-size: 12pt;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.id_control_input {
+  border: none;
+  width: 97%;
+  height: 25px;
+  margin: 5px;
+}
+
+.container textarea {
+  resize: none;
+  border: 1px solid #e0e0e0;
+  height: 180px;
+}
+
+.flexStyle button {
+  margin: 8px;
+  cursor: pointer;
+  padding: 8px;
+  background-color: #1d81ff;
+  border: 1px solid #1d81ff;
+  border-radius: 5px;
+  color: white;
+  margin-right: 0px;
+  margin-bottom: -8px;
+}
