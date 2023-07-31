@@ -1,20 +1,20 @@
 @media screen and (max-width: 1000px) {
-  #app {
+  #print-jira {
     height: 98vh;
     width: 100%;
     min-width: 1000px;
     align-items: center;
     display: flex;
-    justify-content: "center";
+    justify-content: 'center';
   }
 }
 
-#app {
+#print-jira {
   height: 98vh;
   width: 100%;
   align-items: center;
   display: flex;
-  justify-content: "center";
+  justify-content: 'center';
 }
 
 .center {
@@ -47,11 +47,12 @@
   margin: 8px 20px;
 }
 
-.container div span {
+.container .flexStyle span {
   margin-top: 5px;
   line-height: 30px;
   min-width: 65px;
   font-weight: bolder;
+  display: inline-block;
 }
 
 .flexStyle input {
@@ -73,26 +74,32 @@
   border-radius: 5px;
   display: initial;
   height: 67px;
+  padding: 3px;
 }
 
 .id_control::-webkit-scrollbar {
   display: none;
 }
 
-.id_control span {
+.tag {
   border-radius: 15px;
   border: none;
   background-color: #1d81ff;
   color: white;
   padding: 3px 8px;
   font-size: 10pt;
-  margin: 5px;
+  margin: 4px;
+  height: 20px;
+  line-height: 20px;
+  min-width: 60px;
+  font-weight: bolder;
+  display: inline-block;
 }
 
-.id_control span::after {
+.tag::after {
   display: inline-block;
   color: white;
-  content: "\00d7";
+  content: '\00d7';
   font-size: 12pt;
   cursor: pointer;
   margin-left: 5px;
