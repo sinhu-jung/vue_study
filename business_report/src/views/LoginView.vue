@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import { reactive, ref, watchEffect, type Ref } from 'vue'
+import { reactive, ref, type Ref, onBeforeMount } from 'vue'
 import Loading from '../components/Loading.vue'
-interface LoginType {
-  address: string
-  id: string
-  pw: string
-}
-
+import { addJiraInfo, getDB, getJiraInfo, type LoginType } from '@/stores/indexedDB'
+import { getBasicAuth } from '@/api/jiraApi'
+import axios from 'axios'
+const dbData: Ref<IDBDatabase | null> = ref(null)
 const isLoading: Ref<boolean> = ref(false)
 const loginInfo: LoginType = reactive({
   address: '',
   id: '',
   pw: ''
+})
+
+onBeforeMount(async () => {
+  isLoading.value = true
+  const dbInfo = (await getDB()) as IDBDatabase
+  const loginInfoData = await getJiraInfo(dbInfo)
+
+  loginInfo.address = loginInfoData[0]?.address ?? ''
+  loginInfo.id = loginInfoData[0]?.id ?? ''
+  loginInfo.pw = loginInfoData[0]?.pw ?? ''
+
+  setTimeout(() => {
+    isLoading.value = false
+  }, 500)
+  dbData.value = dbInfo
 })
 
 const onChangeAddress = (e: Event) => {
@@ -29,11 +42,22 @@ const onChangePw = (e: Event) => {
   loginInfo.pw = inputData.value
 }
 
-watchEffect(() => {
-  console.log(loginInfo.address)
-  console.log(loginInfo.id)
-  console.log(loginInfo.pw)
-})
+const onClickLogin = async () => {
+  try {
+    const result = await axios.post(
+      '',
+      {},
+      {
+        headers: {
+          Authorization: getBasicAuth(loginInfo),
+          ['Access-Control-Allow-Origin']: '*'
+        }
+      }
+    )
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
 </script>
 
 <template>
@@ -50,7 +74,7 @@ watchEffect(() => {
           <input
             v-model="loginInfo.address"
             @input="onChangeAddress"
-            placeholder="http://지라주소:8080/"
+            placeholder="http://jira:8080/"
           />
         </div>
         <div>
@@ -69,7 +93,7 @@ watchEffect(() => {
             placeholder="지라 접속 비밀번호를 입력하세요."
           />
         </div>
-        <button>로그인</button>
+        <button @click="onClickLogin">로그인</button>
       </div>
     </div>
   </div>

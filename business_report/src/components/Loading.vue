@@ -114,7 +114,7 @@
 
 @media screen and (max-width: 1000px) {
   .loader-wrap {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0);
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -129,7 +129,7 @@
 }
 
 .loader-wrap {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0);
   justify-content: center;
   align-items: center;
   position: fixed;
