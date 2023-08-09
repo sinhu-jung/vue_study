@@ -19,5 +19,8 @@ module.exports = {
     "vue/multi-word-component-names": 0,
     "@typescript-eslint/ban-ts-comment": "off",
     "eslint-disable-next-line no-undef": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "no-useless-escape": 0,
+    "prefer-const": 0,
   },
 };

@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import LoginView from "../views/LoginView.vue";
 
 const router = createRouter({
   //@ts-ignore
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/",

@@ -8,8 +8,4 @@ const getBasicAuth = (loginInfo: {
   )}`;
 };
 
-// const sendJira = async (loginInfo: LoginType) => {
-//   return fetch()
-// }
-
 export { getBasicAuth };

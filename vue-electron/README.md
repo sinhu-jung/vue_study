@@ -1,24 +1,30 @@
 # vue-electron
+- 업무보고 자동화 프로젝트
 
-## Project setup
+## setup
 ```
-yarn install
-```
+$ yarn
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+or
 
-### Compiles and minifies for production
-```
-yarn build
+$ npm i
 ```
 
-### Lints and fixes files
+### 시작하기
 ```
-yarn lint
+$ yarn app:serve
+
+or
+
+$ npm run app:serve
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 앱 배포
+```
+$ yarn app:build
+
+or
+
+$ npm run app:build
+```
+

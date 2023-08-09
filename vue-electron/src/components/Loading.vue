@@ -97,7 +97,7 @@
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 800px) {
   .loader-wrap {
     background-color: rgba(0, 0, 0);
     justify-content: center;
@@ -109,7 +109,7 @@
     bottom: 0;
     display: flex;
     padding: 15px;
-    min-width: 1000px;
+    min-width: 800px;
   }
 }
 

@@ -1,8 +1,8 @@
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 800px) {
   #print-jira {
-    height: 98vh;
+    height: 97vh;
     width: 100%;
-    min-width: 1000px;
+    min-width: 790px;
     align-items: center;
     display: flex;
     justify-content: "center";
@@ -10,7 +10,7 @@
 }
 
 #print-jira {
-  height: 98vh;
+  height: 97vh;
   width: 100%;
   align-items: center;
   display: flex;
@@ -25,12 +25,12 @@
 .print-center h1 {
   width: 600px;
   text-align: center;
-  font-size: larger;
+  font-size: x-large;
 }
 
 .print-container {
   width: 600px;
-  height: 600px;
+  height: 480px;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   padding: 25px;
@@ -96,13 +96,15 @@
   display: inline-block;
 }
 
-.tag::after {
-  display: inline-block;
+.delete-tag::after {
+  display: block;
   color: white;
   content: "\00d7";
   font-size: 12pt;
   cursor: pointer;
+  padding-top: 1px;
   margin-left: 5px;
+  float: right;
 }
 
 .id_control_input {

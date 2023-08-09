@@ -16,6 +16,7 @@ interface ResultTypes {
   data: unknown | null;
   message: string;
 }
+const tableName = "jiraInfo";
 const router = useRouter();
 const dbData: Ref<IDBDatabase | null> = ref(null);
 const isLoading: Ref<boolean> = ref(false);
@@ -34,10 +35,9 @@ const loginInfo: LoginType = reactive({
 onBeforeMount(async () => {
   isLoading.value = true;
   const dbInfo = (await getDB()) as IDBDatabase;
-  const loginInfoData = await getJiraInfo(dbInfo);
+  const loginInfoData = await getJiraInfo(dbInfo, tableName);
 
-  loginInfo.address =
-    loginInfoData[0]?.address ?? "http://jira.duzon.com:8080/";
+  loginInfo.address = loginInfoData[0]?.address ?? "http://jira.com:8080/";
   loginInfo.id = loginInfoData[0]?.id ?? "";
   loginInfo.pw = loginInfoData[0]?.pw ?? "";
 
@@ -47,40 +47,28 @@ onBeforeMount(async () => {
   dbData.value = dbInfo;
 });
 
-const onChangeAddress = (e: Event) => {
-  const inputData = e.target as HTMLInputElement;
-  loginInfo.address = inputData.value;
-};
-
-const onChangeId = (e: Event) => {
-  const inputData = e.target as HTMLInputElement;
-  loginInfo.id = inputData.value;
-};
-
-const onChangePw = (e: Event) => {
-  const inputData = e.target as HTMLInputElement;
-  loginInfo.pw = inputData.value;
-};
-
 const onCloseErrorAlert = () => {
   errorAlert.value = false;
 };
 
 const onClickLogin = async () => {
+  isLoading.value = true;
   const data: ResultTypes = (await ipcRenderer.invoke(
     "login",
     JSON.stringify(loginInfo)
   )) as ResultTypes;
 
   if (data.status === 200) {
-    addJiraInfo(dbData.value as IDBDatabase, loginInfo);
+    addJiraInfo(dbData.value as IDBDatabase, loginInfo, tableName);
     router.push({
       path: "print-jira",
     });
+    isLoading.value = false;
   } else {
     errorAlert.value = true;
     errorInfo.status = data.status;
     errorInfo.message = data.message;
+    isLoading.value = false;
   }
 };
 </script>
@@ -97,22 +85,20 @@ const onClickLogin = async () => {
       <div class="img_center">
         <img src="../assets/V-image.png" height="70" width="70" />
       </div>
-      <h1>공공플랫폼 업무보고</h1>
+      <h1>**** 업무보고</h1>
       <div class="container">
         <div>
           <span>지라 주소</span>
           <input
             v-model="loginInfo.address"
-            @input="onChangeAddress"
             @keyup.enter="onClickLogin"
-            placeholder="http://jira.duzon.com:8080/"
+            placeholder="http://jira.com:8080/"
           />
         </div>
         <div>
           <span>ID</span>
           <input
             v-model="loginInfo.id"
-            @input="onChangeId"
             @keyup.enter="onClickLogin"
             placeholder="지라 접속 계정을 입력하세요."
           />
@@ -122,7 +108,6 @@ const onClickLogin = async () => {
           <input
             type="password"
             v-model="loginInfo.pw"
-            @input="onChangePw"
             @keyup.enter="onClickLogin"
             placeholder="지라 접속 비밀번호를 입력하세요."
           />

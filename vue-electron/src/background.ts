@@ -5,6 +5,7 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
 import axios from "axios";
 import { getBasicAuth } from "./api/jiraApi";
+import { LoginType } from "./stores/indexedDB";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Scheme must be registered before the app is ready
@@ -18,13 +19,17 @@ const errorMessage: {
   [200]: "로그인에 성공 하셨습니다.",
   [401]: "로그인 정보가 일치하지 않습니다.",
   [403]:
-    "로그인에 여러번 실패 하셨습니다.\nhttp://jira.duzon.com:8080/ 으로 로그인후 다시 시도 해주세요",
+    "로그인에 여러번 실패 하셨습니다.\nhttp://jira.com:8080/ 으로 로그인후 다시 시도 해주세요",
+  [500]: "서버에러",
+  [501]: "서버에러",
+  [502]: "서버에러",
+  [503]: "서버에러",
 };
 
-ipcMain.handle("login", async (event, args) => {
+ipcMain.handle("login", async (_, args) => {
   try {
     const result = await axios
-      .get("http://jira.duzon.com:8080/rest/api/2/mypermissions", {
+      .get("http://jira.com:8080/rest/api/2/mypermissions", {
         headers: {
           Authorization: getBasicAuth(JSON.parse(args)),
         },
@@ -46,15 +51,65 @@ ipcMain.handle("login", async (event, args) => {
   }
 });
 
+ipcMain.handle("postJiraTicket", async (_, args) => {
+  const data: {
+    loginInfo: LoginType;
+    jql: string;
+  } = JSON.parse(args);
+  try {
+    const result = await axios
+      .post(
+        "http://jira.com:8080/rest/api/2/search",
+        {
+          fields: [
+            "labels",
+            "summary",
+            "status",
+            "assignee",
+            "displayName",
+            "duedate",
+            "customfield_10832",
+            "customfield_10833",
+            "aggregateprogress",
+            "priority",
+            "comment",
+          ],
+          jql: data.jql,
+        },
+        {
+          headers: {
+            Authorization: getBasicAuth(data.loginInfo),
+          },
+        }
+      )
+      .then((data) => ({
+        status: data.status,
+        data: data.data,
+        message: "success",
+      }))
+      .catch((e) => ({
+        status: e.response.status,
+        data: null,
+        message: errorMessage[e.response.status],
+      }));
+
+    return result;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+});
+
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1100,
-    height: 800,
-    title: "공공플랫폼 업무보고",
+    width: 800,
+    height: 670,
+    title: "**** 업무보고",
+    resizable: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+      webSecurity: false,
       nodeIntegration: true,
       contextIsolation: false,
     },
